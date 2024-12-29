@@ -2,3 +2,5 @@
 ``` type of features it contains are ```
 - chating to collaborators
 - propt to AI
+- Create user
+- Authentication & Authrization
