@@ -13,8 +13,8 @@ router.post('/register',
     userController.createUserController);
 
 router.post('/login',
-    body('email').isEmail().withMessage('Email must be a valid email address'),
-    body('password').isLength({ min: 3 }).withMessage('Password must be at least 3 characters long'),
+    body('email').isEmail().withMessage('Email must be a valid email address, please enter a valid email'),
+    body('password').isLength({ min: 3 }).withMessage('Password must be at least 3 characters long, please enter a valid password'),
     userController.loginController);
 
 router.get('/profile', authMiddleware.authUser, userController.profileController);
