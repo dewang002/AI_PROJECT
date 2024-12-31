@@ -1,10 +1,11 @@
 import React from 'react'
-
+import AppRouter from './routes/AppRouter'
+import { UserProvider } from './context/user.context'
 function App() {
   return (
-    <div className=''>
-      d
-    </div>
+      <UserProvider >
+        <AppRouter />
+      </UserProvider>
   )
 }
 
