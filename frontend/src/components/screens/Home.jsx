@@ -6,6 +6,15 @@ function Home() {
   const createProject = (e) => {
     e.preventDefault();
     console.log({projectname});
+    axios("/projects/create",{
+      name:projectname,
+    })
+    .then((res)=>{
+      setModal(false)
+    })
+    .catch((error)=>{
+      console.log("error in home "+error)
+    })
   };
   return (
     <>
