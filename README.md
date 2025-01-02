@@ -4,4 +4,4 @@
 - propt to AI
 - Create user
 - Authentication & Authrization
-- MERN Stack Developer AI assistant
+- AI assistant
