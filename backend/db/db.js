@@ -1,7 +1,8 @@
+
 import mongoose from "mongoose";
 
 function connect() {
-    const uri = process.env.MONGODB_URI.replace('<db_password>', process.env.MONGODB_PASSWORD);
+    const uri = process.env.MONGODB_URI;
     
     return mongoose.connect(uri)
         .then(() => {

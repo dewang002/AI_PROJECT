@@ -1,6 +1,6 @@
 import React from 'react'
-import AppRouter from './routes/AppRouter'
-import { UserProvider } from './context/user.context'
+import AppRouter from './routes/AppRouter.jsx'
+import { UserProvider } from './context/user.context.jsx'
 function App() {
   return (
       <UserProvider >
