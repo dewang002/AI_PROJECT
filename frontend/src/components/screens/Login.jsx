@@ -1,28 +1,29 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "../../config/axios";
 import UserContext from "../../context/User.context";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {setUser} = useContext(UserContext)
+  const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post("/user/login", () => {
-        email, password;
+    axios.post("/users/login", {
+        email,
+        password
       })
       .then((res) => {
-       localStorage.setItem("token" , res.data.token)
-        setUser(res.data.user)
-        nevigate("/");
+        localStorage.setItem("token", res.data.token);
+        setUser(res.data.user);
+        navigate("/");
       })
       .catch((e) => {
-        console.log("error at login submition");
+        console.log("error at login submission");
       });
-
   };
 
   return (
@@ -31,28 +32,29 @@ function Login() {
         <h3 className="text-xl font-semibold">Login</h3>
         <form onSubmit={handleSubmit}>
           <div className="h-full w-full flex flex-col justify-center items-center lg:gap-10">
-            <div className="h-8 w-full">
+            <div className="h-8 ">
               <h4>E-mail</h4>
               <input
-                onClick={(e) => {
+                onChange={(e) => {
                   setEmail(e.target.value);
                 }}
-                className="h-full w-full rounded-md"
-                type="text"
+                className="rounded-md"
+                type="email"
+                value={email}
               />
             </div>
-            <div className="h-8 w-full">
+            <div className="h-8">
               <h4>Password</h4>
               <input
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
-                className="h-full w-full rounded-md"
-                type="text"
+                className="rounded-md"
+                type="password"
+                value={password}
               />
             </div>
             <button
-              onClick={() => handleClick}
               className="w-full h-8 text-white bg-blue-600 rounded-md"
               type="submit"
             >
@@ -62,7 +64,7 @@ function Login() {
         </form>
 
         <h3>
-          Don't have an account ?{" "}
+          Don't have an account?{" "}
           <Link to="/register">
             <span className="text-blue-600">Click here</span>
           </Link>
