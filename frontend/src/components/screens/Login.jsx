@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../config/axios";
-import UserContext from "../../context/user.context";
+import UserContext from "../../context/User.context";
 
 function Login() {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const {setUser} = useContext(UserContext)
 
   const handleSubmit = (e) => {
@@ -15,14 +15,14 @@ function Login() {
         email, password;
       })
       .then((res) => {
-        localStorage.setItem("token" , res.data.token)
+       localStorage.setItem("token" , res.data.token)
         setUser(res.data.user)
         nevigate("/");
       })
       .catch((e) => {
         console.log("error at login submition");
       });
-      
+
   };
 
   return (
