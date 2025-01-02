@@ -31,28 +31,27 @@ function Login() {
         <h3 className="text-xl font-semibold">Login</h3>
         <form onSubmit={handleSubmit}>
           <div className="h-full w-full flex flex-col justify-center items-center lg:gap-10">
-            <div className="h-8 w-full">
+            <div className="h-8 ">
               <h4>E-mail</h4>
               <input
                 onClick={(e) => {
                   setEmail(e.target.value);
                 }}
-                className="h-full w-full rounded-md"
+                className=" rounded-md"
                 type="text"
               />
             </div>
-            <div className="h-8 w-full">
+            <div className="h-8">
               <h4>Password</h4>
               <input
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
-                className="h-full w-full rounded-md"
+                className=" rounded-md"
                 type="text"
               />
             </div>
             <button
-              onClick={() => handleClick}
               className="w-full h-8 text-white bg-blue-600 rounded-md"
               type="submit"
             >
