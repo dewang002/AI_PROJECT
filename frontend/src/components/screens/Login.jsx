@@ -6,19 +6,13 @@ import UserContext from "../../context/User.context";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-<<<<<<< HEAD
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
-=======
-  const {setUser} = useContext(UserContext)
-  const navigate = useNavigate()
->>>>>>> 1b5890056c03cfea94e3827af09ccff769d94d46
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     axios.post("/users/login", {
-<<<<<<< HEAD
         email,
         password
       })
@@ -30,19 +24,6 @@ function Login() {
       .catch((e) => {
         console.log("error at login submission");
       });
-=======
-      email, password
-    })
-    .then((res) => {
-      localStorage.setItem("token",res.data.token)
-      setUser(res.data.user)
-      navigate("/");
-    })
-    .catch((e) => {
-      console.log("error at login submition "+ e);
-    });
-
->>>>>>> 1b5890056c03cfea94e3827af09ccff769d94d46
   };
 
   return (
