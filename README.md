@@ -5,3 +5,7 @@
 - Create user
 - Authentication & Authrization
 - AI assistant
+- User and Project data store and protect
+-User can change the email and name 
+-User can add thier Display picture 
+-

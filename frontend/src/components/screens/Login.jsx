@@ -6,24 +6,24 @@ import UserContext from "../../context/User.context";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {setUser} = useContext(UserContext)
-  const navigate = useNavigate()
+  const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     axios.post("/users/login", {
-      email, password
-    })
-    .then((res) => {
-      localStorage.setItem("token",res.data.token)
-      setUser(res.data.user)
-      navigate("/");
-    })
-    .catch((e) => {
-      console.log("error at login submition "+ e);
-    });
-
+        email,
+        password
+      })
+      .then((res) => {
+        localStorage.setItem("token", res.data.token);
+        setUser(res.data.user);
+        navigate("/");
+      })
+      .catch((e) => {
+        console.log("error at login submission");
+      });
   };
 
   return (
@@ -39,8 +39,9 @@ function Login() {
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
-                className=" rounded-md"
-                type="text"
+                className="rounded-md"
+                type="email"
+                value={email}
               />
             </div>
             <div className="h-8">
@@ -49,8 +50,9 @@ function Login() {
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
-                className=" rounded-md"
-                type="text"
+                className="rounded-md"
+                type="password"
+                value={password}
               />
             </div>
             <button
@@ -63,7 +65,7 @@ function Login() {
         </form>
 
         <h3>
-          Don't have an account ?{" "}
+          Don't have an account?{" "}
           <Link to="/register">
             <span className="text-blue-600">Click here</span>
           </Link>
