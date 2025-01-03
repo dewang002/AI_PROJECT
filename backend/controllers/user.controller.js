@@ -2,7 +2,8 @@ import userModel from '../models/user.model.js';
 import * as userService from '../services/user.service.js';
 import { validationResult } from 'express-validator';
 import redisClient from '../services/redis.service.js';
-
+const User = require('../models/userModel'); // Assume this is your user model
+const bcrypt = require('bcrypt');
 
 export const createUserController = async (req, res) => {
 
@@ -112,3 +113,31 @@ export const getAllUsersController = async (req, res) => {
 
     }
 }
+
+
+
+exports.updateUserName = async (req, res) => {
+  try {
+    const { newName, password } = req.body;
+
+    if (!newName || !password) {
+      return res.status(400).json({ message: 'Name and password are required' });
+    }
+
+    // Verify user identity
+    const user = req.user; // This is set by `authenticateUser` middleware
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid password' });
+    }
+
+    // Update the user's name
+    user.name = newName;
+    await user.save();
+
+    res.status(200).json({ message: 'Name updated successfully', name: user.name });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
