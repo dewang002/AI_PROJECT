@@ -9,10 +9,10 @@ function Register() {
   const {setUser} = useContext(UserContext)
 
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try{
-       await axios.post("/users/register", {
+    
+        axios.post("/users/register", {
           email, password
         })
         .then((res) => {
@@ -23,9 +23,7 @@ function Register() {
         .catch((e) => {
           console.log("error at login submition "+ e);
         });
-    }catch(e){
-      console.log(e)
-    }
+    
   };
 
   return (
