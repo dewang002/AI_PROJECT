@@ -2,8 +2,8 @@ import userModel from '../models/user.model.js';
 import * as userService from '../services/user.service.js';
 import { validationResult } from 'express-validator';
 import redisClient from '../services/redis.service.js';
-const User = require('../models/userModel'); // Assume this is your user model
-const bcrypt = require('bcrypt');
+
+import bcrypt from 'bcrypt'
 
 export const createUserController = async (req, res) => {
 
@@ -116,7 +116,7 @@ export const getAllUsersController = async (req, res) => {
 
 
 
-exports.updateUserName = async (req, res) => {
+export const updateUserName = async (req, res) => {
   try {
     const { newName, password } = req.body;
 
