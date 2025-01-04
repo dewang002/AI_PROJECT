@@ -19,6 +19,7 @@ router.post('/login',
 
 router.get('/profile', authMiddleware.authUser, userController.profileController);
 
+router.post('/rename' ,authMiddleware.authUser,userController.updateUserName )
 
 router.get('/logout', authMiddleware.authUser, userController.logoutController);
 
