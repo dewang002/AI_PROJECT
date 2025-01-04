@@ -1,18 +1,53 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FaUserGroup } from "react-icons/fa6";
 import { GrSend } from "react-icons/gr";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { CiUser } from "react-icons/ci";
+import { IoMdPersonAdd } from "react-icons/io";
 
 const Project = () => {
   const [showMember, setShowMember] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState([]);
   const location = useLocation();
-  console.log(location.state);
+  const groupListRef = useRef(null);
+
+  const users = [
+    { id: 1, user: "dewang" },
+    { id: 2, user: "dew" },
+    { id: 3, user: "dewan" },
+    { id: 4, user: "dewa" },
+    { id: 5, user: "d" },
+    { id: 6, user: "deng" },
+    { id: 7, user: "dewang" },
+    { id: 8, user: "dwang" },
+    { id: 9, user: "deg" },
+  ];
+
+  const handleSelect = (id) => {
+    setSelectedUser([...selectedUser, id]);
+  };
+
+  useEffect(() => {
+    const handleClose = (e) => {
+      if (groupListRef.current && !groupListRef.current.contains(e.target)) {
+        setShowMember(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClose);
+    return () => {
+      document.addEventListener("mousedown", handleClose);
+    };
+  });
   return (
-    <div className="h-screen w-screen">
+    <div className="h-screen w-screen flex">
       <section className="relative sideBar flex flex-col max-w-[24%] h-full shadow-xl bg-zinc-300">
-        <header className="w-full h-16 border-b-[1px] border-black flex justify-end items-center p-4 ">
+        <header className="w-full h-16 border-b-[1px] border-black flex justify-between items-center p-4 ">
+          <button onClick={() => setModal(true)}>
+            <IoMdPersonAdd size={24} />
+          </button>
           <button onClick={() => setShowMember(true)}>
             <FaUserGroup size={24} />
           </button>
@@ -41,30 +76,63 @@ const Project = () => {
               type="any"
               placeholder="type message..."
             />
-            <button className="flex-grow hover:scale-95">{<GrSend size={24} />}</button>
+            <button className="flex-grow hover:scale-95">
+              {<GrSend size={24} />}
+            </button>
           </div>
         </div>
 
-        <div className={`w-full top-0 overflow-hidden transition-all  ${showMember?"translate-x-0":"translate-x-[-100%]"} h-full bg-zinc-400 absolute`}>
+        <div
+          className={`group_list w-full top-0 overflow-hidden transition-all  ${
+            showMember ? "translate-x-0" : "translate-x-[-100%]"
+          } h-full bg-zinc-400 absolute`}
+          ref={groupListRef}
+        >
           <header className="w-full h-16 border-b-[1px] border-black flex justify-end items-center p-4 ">
             <button onClick={() => setShowMember(false)}>
               <IoIosCloseCircleOutline size={24} />
             </button>
           </header>
 
-            <div className="users flex flex-col gap-2 h-full w-full">
-                <div className="user cursor-pointer hover:bg-zinc-300 p-2 flex items-center gap-2">
-                    <div className="p-1 bg-zinc-500 w-fit h-fit rounded-full" >
-                        <CiUser size={"1.4vw"} />                        
-                    </div>
-                    <h3 className="font-semibold text-lg">dewang</h3>
+          <div className="users flex flex-col gap-2 h-full w-full">
+            <div className="user cursor-pointer hover:bg-zinc-300 p-2 flex items-center gap-2">
+              <div className="p-1 bg-zinc-500 w-fit h-fit rounded-full">
+                <CiUser size={24} />
+              </div>
+              <h3 className="font-semibold text-lg">dewang</h3>
+            </div>
+          </div>
+        </div>
+      </section>
+      {modal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/45">
+          <div className=" bg-white w-1/5 rounded-lg shadow-lg p-6 ">
+            <h2 className="text-lg font-bold mb-4">Add Collaborators</h2>
+            <div className="max-h-[40vh] flex flex-col gap-2 overflow-auto">
+              {users.map((elem) => (
+                <div
+                  onClick={() => handleSelect(elem.id)}
+                  className={`flex items-center gap-2 text-lg font-semibold hover:bg-zinc-300 ${selectedUser.indexOf(elem.id)!=-1?"bg-zinc-300":""} `}
+                >
+                  <CiUser /> {elem.user}
                 </div>
+              ))}
             </div>
 
+            <div className="flex gap-2 mt-4">
+              <button
+                onClick={() => setModal(!modal)}
+                className=" bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 w-full rounded"
+              >
+                Cancel
+              </button>
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-full rounded">
+                Save
+              </button>
+            </div>
+          </div>
         </div>
-
-
-      </section>
+      )}
     </div>
   );
 };
