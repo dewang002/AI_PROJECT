@@ -5,31 +5,54 @@ import { GrSend } from "react-icons/gr";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { CiUser } from "react-icons/ci";
 import { IoMdPersonAdd } from "react-icons/io";
+import axios from "../../config/axios";
 
 const Project = () => {
   const [showMember, setShowMember] = useState(false);
   const [modal, setModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState([]);
-  const location = useLocation();
+  const [user, setUser] = useState([]);
   const groupListRef = useRef(null);
+  const location = useLocation();
 
-  const users = [
-    { id: 1, user: "dewang" },
-    { id: 2, user: "dew" },
-    { id: 3, user: "dewan" },
-    { id: 4, user: "dewa" },
-    { id: 5, user: "d" },
-    { id: 6, user: "deng" },
-    { id: 7, user: "dewang" },
-    { id: 8, user: "dwang" },
-    { id: 9, user: "deg" },
-  ];
-
+  //this just add users in the popup modal
   const handleSelect = (id) => {
-    setSelectedUser([...selectedUser, id]);
+    const isSelected = selectedUser.includes(id);
+    if (isSelected) {
+      setSelectedUser(selectedUser.filter((userId) => userId !== id));
+    } else {
+      setSelectedUser([...selectedUser, id]);
+    }
+  };
+  //this is to set the collaborators, who can access certain projects
+  const settingCollaborators = () => {
+    axios.put("/projects/add-user",
+      {
+        projectId: location.state.projectView.map(elem=>elem._id),
+        users: Array.from(selectedUser),
+      })
+        .then((res) => {
+          
+          setModal(false);
+        })
+        .catch((err) => {
+          console.log("error while adding collaborators "+err);
+        });
   };
 
   useEffect(() => {
+    axios
+      .get("/users/all")
+      .then((res) => {
+        setUser(res.data.users);
+      })
+      .catch((err) => {
+        console.log("error while showing all users");
+      });
+  }, []);
+
+  useEffect(() => {
+    //this handleclose just close the side bar when you click outside of the box
     const handleClose = (e) => {
       if (groupListRef.current && !groupListRef.current.contains(e.target)) {
         setShowMember(false);
@@ -109,12 +132,15 @@ const Project = () => {
           <div className=" bg-white w-1/5 rounded-lg shadow-lg p-6 ">
             <h2 className="text-lg font-bold mb-4">Add Collaborators</h2>
             <div className="max-h-[40vh] flex flex-col gap-2 overflow-auto">
-              {users.map((elem) => (
+              {user.map((elem) => (
                 <div
-                  onClick={() => handleSelect(elem.id)}
-                  className={`flex items-center gap-2 text-lg font-semibold hover:bg-zinc-300 ${selectedUser.indexOf(elem.id)!=-1?"bg-zinc-300":""} `}
+                  key={elem._id}
+                  onClick={() => handleSelect(elem?._id)}
+                  className={`flex items-center gap-2 text-lg font-semibold hover:bg-zinc-300 ${
+                    selectedUser.indexOf(elem?._id) != -1 ? "bg-zinc-300" : ""
+                  } `}
                 >
-                  <CiUser /> {elem.user}
+                  <CiUser /> {elem.email}
                 </div>
               ))}
             </div>
@@ -126,7 +152,10 @@ const Project = () => {
               >
                 Cancel
               </button>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-full rounded">
+              <button
+                onClick={settingCollaborators}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 w-full rounded"
+              >
                 Save
               </button>
             </div>
