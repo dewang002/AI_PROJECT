@@ -3,9 +3,7 @@ import * as projectService from '../services/project.service.js';
 import userModel from '../models/user.model.js';
 import { validationResult } from 'express-validator';
 
-
 export const createProject = async (req, res) => {
-
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -13,7 +11,6 @@ export const createProject = async (req, res) => {
     }
 
     try {
-
         const { name } = req.body;
         const loggedInUser = await userModel.findOne({ email: req.user.email });
         const userId = loggedInUser._id;
@@ -21,36 +18,30 @@ export const createProject = async (req, res) => {
         const newProject = await projectService.createProject({ name, userId });
 
         res.status(201).json(newProject);
-
     } catch (err) {
         console.log(err);
         res.status(400).send(err.message);
     }
-
-
-
-}
+};
 
 export const getAllProject = async (req, res) => {
     try {
-
         const loggedInUser = await userModel.findOne({
-            email: req.user.email
-        })
+            email: req.user.email,
+        });
 
         const allUserProjects = await projectService.getAllProjectByUserId({
-            userId: loggedInUser._id
-        })
+            userId: loggedInUser._id,
+        });
 
         return res.status(200).json({
-            projects: allUserProjects
-        })
-
+            projects: allUserProjects,
+        });
     } catch (err) {
-        console.log(err)
-        res.status(400).json({ error: err.message })
+        console.log(err);
+        res.status(400).json({ error: err.message });
     }
-}
+};
 
 export const addUserToProject = async (req, res) => {
     const errors = validationResult(req);
@@ -60,50 +51,41 @@ export const addUserToProject = async (req, res) => {
     }
 
     try {
-
-        const { projectId, users } = req.body
+        const { projectId, users } = req.body;
 
         const loggedInUser = await userModel.findOne({
-            email: req.user.email
-        })
-
+            email: req.user.email,
+        });
 
         const project = await projectService.addUsersToProject({
             projectId,
             users,
-            userId: loggedInUser._id
-        })
+            userId: loggedInUser._id,
+        });
 
         return res.status(200).json({
             project,
-        })
-
+        });
     } catch (err) {
-        console.log(err)
-        res.status(400).json({ error: err.message })
+        console.log(err);
+        res.status(400).json({ error: err.message });
     }
-
-
-}
+};
 
 export const getProjectById = async (req, res) => {
-
     const { projectId } = req.params;
 
     try {
-
         const project = await projectService.getProjectById({ projectId });
 
         return res.status(200).json({
-            project
-        })
-        
+            project,
+        });
     } catch (err) {
-        console.log(err)
-        res.status(400).json({ error: err.message })
+        console.log(err);
+        res.status(400).json({ error: err.message });
     }
-
-}
+};
 
 export const updateFileTree = async (req, res) => {
     const errors = validationResult(req);
@@ -113,21 +95,42 @@ export const updateFileTree = async (req, res) => {
     }
 
     try {
-
         const { projectId, fileTree } = req.body;
 
         const project = await projectService.updateFileTree({
             projectId,
-            fileTree
-        })
+            fileTree,
+        });
 
         return res.status(200).json({
-            project
-        })
-
+            project,
+        });
     } catch (err) {
-        console.log(err)
-        res.status(400).json({ error: err.message })
+        console.log(err);
+        res.status(400).json({ error: err.message });
     }
+};
 
-}
+// New Function: Delete Project
+export const deleteProject = async (req, res) => {
+    const { projectId } = req.params;
+
+    try {
+        // Check if the project exists
+        const project = await projectModel.findById(projectId);
+
+        if (!project) {
+            return res.status(404).json({ error: 'Project not found' });
+        }
+
+        // Delete the project
+        await projectService.deleteProjectById(projectId);
+
+        return res.status(200).json({
+            message: 'Project deleted successfully',
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(400).json({ error: err.message });
+    }
+};
