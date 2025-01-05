@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { body } from 'express-validator';
 import * as projectController from '../controllers/project.controller.js';
 import * as authMiddleWare from '../middleware/auth.middleware.js';
+import { deleteProject } from '../controllers/project.controller.js';
 
 const router = Router();
 
@@ -37,5 +38,8 @@ router.put('/update-file-tree',
     projectController.updateFileTree
 )
 
+
+
+router.delete('/projects/:projectId', deleteProject);
 
 export default router;
