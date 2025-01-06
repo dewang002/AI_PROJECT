@@ -7,8 +7,9 @@ import { useNavigate } from "react-router-dom";
 function Home() {
   const { user } = useContext(UserContext);
   const [modal, setModal] = useState(false);
-  const [projectname, setProjectname] = useState("");
+  const [projectname, setProjectname] = useState(null);
   const [projectView, setProjectView] = useState([]);
+
   const navigate = useNavigate();
 
   const createProject = (e) => {
@@ -25,15 +26,14 @@ function Home() {
       });
   };
 
-  const handleProject = () => {
-    navigate("/project", {
-      state: { projectView },
-    });
+  const handleProject = (elem) => {
+    navigate(`/project`, {
+      state: { elem }
+  })
   };
 
   useEffect(() => {
-    axios
-      .get("/projects/all")
+    axios.get("/projects/all")
       .then((res) => {
         setProjectView(res.data.projects);
       })
@@ -54,9 +54,12 @@ function Home() {
         </button>
 
         {projectView.map((elem) => (
+          
           <div
             key={elem._id}
-            onClick={handleProject}
+            onClick={()=>navigate("/project",{
+              state:{elem}
+            })}
             className="project_tile w-fit p-2 text-lg font-bold border-2 rounded-md border-[#f0f0f0f0] my-4"
           >
             <h3>{elem.name}</h3>

@@ -8,12 +8,13 @@ import { IoMdPersonAdd } from "react-icons/io";
 import axios from "../../config/axios";
 
 const Project = () => {
+  const location = useLocation();
   const [showMember, setShowMember] = useState(false);
   const [modal, setModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState([]);
   const [user, setUser] = useState([]);
+  const [projects, setProjects] = useState(location.state.elem);
   const groupListRef = useRef(null);
-  const location = useLocation();
 
   //this just add users in the popup modal
   const handleSelect = (id) => {
@@ -24,20 +25,20 @@ const Project = () => {
       setSelectedUser([...selectedUser, id]);
     }
   };
+
   //this is to set the collaborators, who can access certain projects
   const settingCollaborators = () => {
-    axios.put("/projects/add-user",
-      {
-        projectId: location.state.projectView.map(elem=>elem._id),
+    axios
+      .put("/projects/add-user", {
+        projectId: location.state.elem._id,
         users: Array.from(selectedUser),
       })
-        .then((res) => {
-          
-          setModal(false);
-        })
-        .catch((err) => {
-          console.log("error while adding collaborators "+err);
-        });
+      .then((res) => {
+        setModal(false);
+      })
+      .catch((err) => {
+        console.log("error while adding collaborators " + err);
+      });
   };
 
   useEffect(() => {
@@ -48,6 +49,15 @@ const Project = () => {
       })
       .catch((err) => {
         console.log("error while showing all users");
+      });
+
+    axios
+      .get(`/projects/get-project/${location.state.elem._id}`)
+      .then((res) => {
+        setProjects(res.data.project);
+      })
+      .catch((err) => {
+        console.log("error showing number of collaborators");
       });
   }, []);
 
@@ -116,17 +126,23 @@ const Project = () => {
               <IoIosCloseCircleOutline size={24} />
             </button>
           </header>
-
           <div className="users flex flex-col gap-2 h-full w-full">
-            <div className="user cursor-pointer hover:bg-zinc-300 p-2 flex items-center gap-2">
-              <div className="p-1 bg-zinc-500 w-fit h-fit rounded-full">
-                <CiUser size={24} />
-              </div>
-              <h3 className="font-semibold text-lg">dewang</h3>
-            </div>
+            {projects.users &&
+              projects.users.map((elem) => (
+                <div
+                  key={elem._id}
+                  className="user cursor-pointer hover:bg-zinc-300 p-2 flex items-center gap-2"
+                >
+                  <div className="p-1 bg-zinc-500 w-fit h-fit rounded-full">
+                    <CiUser size={24} />
+                  </div>
+                  <h3 className="font-semibold text-lg">{elem.email}</h3>
+                </div>
+              ))}
           </div>
         </div>
       </section>
+
       {modal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/45">
           <div className=" bg-white w-1/5 rounded-lg shadow-lg p-6 ">
