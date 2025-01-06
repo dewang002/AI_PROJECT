@@ -136,3 +136,6 @@ export const updateFileTree = async ({ projectId, fileTree }) => {
 
     return project;
 }
+export const deleteProjectById = async (projectId) => {
+    await projectModel.findByIdAndDelete(projectId);
+};
