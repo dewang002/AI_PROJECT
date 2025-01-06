@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState,useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { FaUserGroup } from "react-icons/fa6";
 import { GrSend } from "react-icons/gr";
@@ -6,15 +6,19 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { CiUser } from "react-icons/ci";
 import { IoMdPersonAdd } from "react-icons/io";
 import axios from "../../config/axios";
-
+import { initializeSocket,reciveMessage,sendMessage } from "../../config/socket";
+import UserContext from "../../context/User.context";
 const Project = () => {
   const location = useLocation();
   const [showMember, setShowMember] = useState(false);
   const [modal, setModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState([]);
-  const [user, setUser] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [message,setMessage] = useState('')
   const [projects, setProjects] = useState(location.state.elem);
   const groupListRef = useRef(null);
+
+  const {user} = useContext(UserContext)
 
   //this just add users in the popup modal
   const handleSelect = (id) => {
@@ -40,12 +44,26 @@ const Project = () => {
         console.log("error while adding collaborators " + err);
       });
   };
+  
+  const send=()=>{
+    sendMessage("project-message",{
+      message,
+      sender:user
+    })
+  }
 
   useEffect(() => {
+
+    initializeSocket(projects._id)
+
+    reciveMessage('project-message',data=>{
+      console.log(data)
+    })
+
     axios
       .get("/users/all")
       .then((res) => {
-        setUser(res.data.users);
+        setUsers(res.data.users);
       })
       .catch((err) => {
         console.log("error while showing all users");
@@ -74,6 +92,12 @@ const Project = () => {
       document.addEventListener("mousedown", handleClose);
     };
   });
+
+
+  const appendMessage = (messageObject) =>{
+    
+  }
+
   return (
     <div className="h-screen w-screen flex">
       <section className="relative sideBar flex flex-col max-w-[24%] h-full shadow-xl bg-zinc-300">
@@ -109,7 +133,7 @@ const Project = () => {
               type="any"
               placeholder="type message..."
             />
-            <button className="flex-grow hover:scale-95">
+            <button value={message} onClick={send} className="flex-grow hover:scale-95">
               {<GrSend size={24} />}
             </button>
           </div>
@@ -121,7 +145,8 @@ const Project = () => {
           } h-full bg-zinc-400 absolute`}
           ref={groupListRef}
         >
-          <header className="w-full h-16 border-b-[1px] border-black flex justify-end items-center p-4 ">
+          <header className="w-full h-16 border-b-[1px] border-black flex justify-between items-center p-4 ">
+           <h1 className="text-lg font-semibold">Collaborators</h1>
             <button onClick={() => setShowMember(false)}>
               <IoIosCloseCircleOutline size={24} />
             </button>
@@ -148,7 +173,7 @@ const Project = () => {
           <div className=" bg-white w-1/5 rounded-lg shadow-lg p-6 ">
             <h2 className="text-lg font-bold mb-4">Add Collaborators</h2>
             <div className="max-h-[40vh] flex flex-col gap-2 overflow-auto">
-              {user.map((elem) => (
+              {users.map((elem) => (
                 <div
                   key={elem._id}
                   onClick={() => handleSelect(elem?._id)}
