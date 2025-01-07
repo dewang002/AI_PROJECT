@@ -1,11 +1,9 @@
 import { Router } from 'express';
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';  // Import param for route parameter validation
 import * as projectController from '../controllers/project.controller.js';
 import * as authMiddleWare from '../middleware/auth.middleware.js';
-import { deleteProject } from '../controllers/project.controller.js';
 
 const router = Router();
-
 
 router.post('/create',
     authMiddleWare.authUser,
@@ -38,8 +36,10 @@ router.put('/update-file-tree',
     projectController.updateFileTree
 )
 
-
-
-router.delete('/projects/:projectId', deleteProject);
+// DELETE route
+router.delete('/project/:projectId', 
+    param('projectId').isString().withMessage('Project ID is required'),  // Validation middleware for route parameter
+    projectController.deleteProject  // Moved deleteProject after the validation
+);
 
 export default router;
