@@ -55,7 +55,6 @@ io.use(async (socket, next) => {
 
 })
 
-
 io.on('connection', socket => {
     socket.roomId = socket.project._id.toString()
 
@@ -95,6 +94,7 @@ io.on('connection', socket => {
 
 
     })
+
 
     socket.on('disconnect', () => {
         console.log('user disconnected');
