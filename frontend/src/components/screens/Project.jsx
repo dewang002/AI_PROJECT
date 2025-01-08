@@ -28,7 +28,6 @@ const Project = () => {
   const [projects, setProjects] = useState(location.state.elem);
   const groupListRef = useRef(null);
   const messageBox = React.createRef();
-
   const { user } = useContext(UserContext);
 
   //this just add users in the popup modal
@@ -119,14 +118,15 @@ const Project = () => {
       "m-2",
       "rounded"
     );
-
+    
     message.innerHTML = `
     <small className="text-md font-bold">${messageObject.sender.email}</small>
-              <h4 className=" bg-white p-1 rounded-lg">
-                ${messageObject.message}
-              </h4>
+    <h4 className=" bg-white p-1 rounded-lg">
+    ${messageObject.message}
+    </h4>
     `;
     messageBox.appendChild(message);
+    smoothScrollChat()
   };
   const appendOutGoingMessage = (messageObject) => {
     const messageBox = document.querySelector(".messages");
@@ -143,19 +143,25 @@ const Project = () => {
       "m-2",
       "rounded"
     );
-
+    
     message.innerHTML = `
     <small className="text-md font-bold">${user.email}</small>
-              <h4 className=" bg-white p-1 rounded-lg">
-                ${messageObject}
-              </h4>
+    <h4 className=" bg-white p-1 rounded-lg">
+    ${messageObject}
+    </h4>
     `;
     messageBox.appendChild(message);
+    smoothScrollChat()
   };
+
+  const smoothScrollChat = ()=>{
+    messageBox.current.scrollTop=messageBox.current.scrollHeight
+  }
+
 
   return (
     <div className="h-screen w-screen flex">
-      <section className="relative sideBar flex flex-col max-w-[24%] h-screen shadow-xl bg-zinc-300">
+      <section className="relative sideBar flex flex-col w-[32%] h-screen shadow-xl bg-zinc-300">
         <header className="absolute z-10 top-0 w-full h-16 border-b-[1px] border-black flex justify-between items-center p-4 ">
           <button onClick={() => setModal(true)}>
             <IoMdPersonAdd size={24} />
@@ -165,13 +171,13 @@ const Project = () => {
           </button>
         </header>
 
-        <div className="message_area cursor-default h-full flex-grow flex flex-col pt-14 relative">
+        <div className="message_area cursor-default h-full flex-grow flex flex-col pt-16 pb-10 relative">
           <div
             ref={messageBox}
-            className="messages p-1 flex-grow flex flex-col gap-1 overflow-y-auto max-h-50vh">
+            className="messages p-1 flex-grow flex flex-col gap-1 overflow-auto max-h-full">
           </div>
 
-          <div className="message_input flex gap-4 w-full p-2">
+          <div className="message_input flex absolute bottom-0 gap-4 w-full">
             <input
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -186,12 +192,12 @@ const Project = () => {
         </div>
 
         <div
-          className={`group_list w-full top-0 overflow-hidden transition-all  ${
+          className={`group_list w-full z-10 top-0 overflow-hidden transition-all  ${
             showMember ? "translate-x-0" : "translate-x-[-100%]"
           } h-full bg-zinc-400 absolute`}
           ref={groupListRef}
         >
-          <header className="w-full h-16 border-b-[1px] border-black flex justify-between items-center p-4 ">
+          <header className="w-full  h-16 border-b-[1px] border-black flex justify-between items-center p-4 ">
             <h1 className="text-lg font-semibold">Collaborators</h1>
             <button onClick={() => setShowMember(false)}>
               <IoIosCloseCircleOutline size={24} />
@@ -215,7 +221,7 @@ const Project = () => {
       </section>
 
       {modal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/45">
+        <div className="fixed  inset-0 flex items-center justify-center bg-black/45">
           <div className=" bg-white w-1/5 rounded-lg shadow-lg p-6 ">
             <h2 className="text-lg font-bold mb-4">Add Collaborators</h2>
             <div className="max-h-[40vh] flex flex-col gap-2 overflow-auto">

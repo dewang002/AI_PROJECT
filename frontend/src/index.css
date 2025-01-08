@@ -5,6 +5,9 @@
 body{
     background-color: rgba(128, 128, 128, 0.457);
 }
+.messages{  
+    scroll-behavior: smooth;
+}
 .messages::-webkit-scrollbar{
     display: none;
 }
