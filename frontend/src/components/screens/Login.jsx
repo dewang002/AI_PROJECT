@@ -9,6 +9,20 @@ function Login() {
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
+const handleEmail = (e)=>{
+  clearTimeout(timer)
+  const timer = setTimeout(()=>{
+    setEmail(e.target.value)
+  },300)
+}
+  const handlePassword = (e)=>{
+    clearTimeout(timer)
+    const timer = setTimeout(()=>{
+      setPassword(e.target.value)
+    },300)
+  }
+
+  
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -36,9 +50,7 @@ function Login() {
             <div className="h-8 ">
               <h4>E-mail</h4>
               <input
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
+                onChange={handleEmail}
                 className="rounded-md"
                 type="email"
                 value={email}
@@ -47,9 +59,7 @@ function Login() {
             <div className="h-8">
               <h4>Password</h4>
               <input
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
+                onChange={handlePassword}
                 className="rounded-md"
                 type="password"
                 value={password}
