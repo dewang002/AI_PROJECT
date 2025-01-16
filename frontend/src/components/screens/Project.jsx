@@ -53,6 +53,14 @@ const Project = () => {
   const messageBox = React.createRef();
   const { user } = useContext(UserContext);
 
+  const handleInputText =(e)=>{
+    clearTimeout(timer)
+    const timer = setTimeout(()=>{
+      setMessage(e.target.value)
+    },300)
+  }
+
+  
   //this just add users in the popup modal
   const handleSelect = (id) => {
     const isSelected = selectedUser.includes(id);
@@ -197,7 +205,7 @@ const Project = () => {
           <div className="message_input flex absolute bottom-0 gap-4 w-full">
             <input
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={handleInputText}
               className="p-2 drop-shadow-xl w-full rounded"
               type="any"
               placeholder="type message..."
